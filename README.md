@@ -1,6 +1,6 @@
 # forum-crawler
 
-A simple crawler for phpBB forum
+A simple crawler for phpBB forums
 
 # Usage
 
