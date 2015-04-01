@@ -95,11 +95,11 @@ class Crawler
         if /showforum=\d+$/.match @url
             start = 0
         else
-            start = Crawl._index(@url)
+            start = Crawler._index(@url)
         end
-        links.keep_if {|link| Crawl._index(link) > start}
+        links.keep_if {|link| Crawler._index(link) > start}
         links.uniq!
-        links.sort! {|a,b| Crawl._index(a) <=> Crawl._index(b)}
+        links.sort! {|a,b| Crawler._index(a) <=> Crawler._index(b)}
         return links[0]
     end
 
@@ -116,11 +116,21 @@ class Crawler
         # Get the pages which are candidates for being next in the forum.
         links = []
         node.css("tr td a").each do |tag_a|
-            if /^\d+$/.match(tag_a.content) and tag_a["href"].include?(@url)
+            if /^\d+$/.match(tag_a.content) and Crawler._is_same_forum(@url,tag_a["href"])
                 links += [tag_a["href"]]
             end
         end
         return links
+    end
+    def self._is_same_forum(url, target)
+        # Returns true if target is in the same forum as url
+        t = /showforum=(\d+)/.match(target)
+        if not t
+            return false
+        end
+        n = /showforum=(\d+)/.match(url)[1].to_i
+        m = t[1].to_i
+        return n == m
     end
 
 end
