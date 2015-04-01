@@ -32,6 +32,9 @@ class Crawler
     end
 
     def buildtree
+        # This is the main function which builds the tree. It's fairly general
+        # and its behaviour depends on a block which gives it data and on the
+        # method do_stuff which feeds the tree.
         node = self.get_page(@url)
         while node
             data = yield(node)
@@ -82,8 +85,33 @@ class Crawler
     end
 
     def get_nextpage(node)
-        return nil
+        links = _get_possible_next(node)
+        if /showforum=\d+$/.match @url
+            start = 0
+        else
+            start = Crawl._index(@url)
+        end
+        links.keep_if {|link| Crawl._index(link) > start}
+        links.uniq!
+        links.sort! {|a,b| Crawl._index(a) <=> Crawl._index(b)}
+        return links[0]
     end
+
+    def self._index(url)
+        return 0 unless /showforum=\d+.*=\d+$/ =~ url
+        return /showforum=\d+.*=(\d+)$/.match(url)[1].to_i
+    end
+
+    def _get_possible_next(node)
+        links = []
+        node.css("tr td a").each do |tag_a|
+            if /^\d+$/.match(tag_a.content) and tag_a["href"].include?(@url)
+                links += [tag_a["href"]]
+            end
+        end
+        return links
+    end
+
 end
 
 class Tree
