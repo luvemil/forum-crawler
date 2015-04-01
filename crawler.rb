@@ -23,6 +23,7 @@ class Crawler
     end
 
     def do_stuff data
+        # Actual tree building.
         data[:subforums].each do |url|
             @cur.add_children url, "forum"
         end
@@ -48,6 +49,7 @@ class Crawler
     end
 
     def ForumCrawler
+        # This provides buildtree with the actual data.
         self.buildtree do |node|
             data = Hash.new()
             data[:subforums] = get_forums(node)
@@ -58,6 +60,7 @@ class Crawler
     end
 
     def CrawlAll
+        # Iterate ForumCrawler recursively.
         self.ForumCrawler
         @cur.children.each do |child|
             if child.attributes[:type] == "forum"
@@ -69,6 +72,7 @@ class Crawler
     end
 
     def get_forums(node)
+        # Returns an array of the subforums in the page.
         forums = []
         node.css("tr td.row4 a").each do |tag_a|
             forums += [tag_a["href"]] if /showforum/.match tag_a["href"]
@@ -77,6 +81,7 @@ class Crawler
     end
 
     def get_threads(node)
+        # Returns an array of the threads in the page.
         threads = []
         node.css("tr td.row4 a").each do |tag_a|
             threads += [tag_a["href"]] if /showtopic=\d+$/.match tag_a["href"]
@@ -85,6 +90,7 @@ class Crawler
     end
 
     def get_nextpage(node)
+        # Returns a link to the next page.
         links = _get_possible_next(node)
         if /showforum=\d+$/.match @url
             start = 0
@@ -98,11 +104,16 @@ class Crawler
     end
 
     def self._index(url)
+        # Returns the last number in the url in case it means something (like
+        # the numbering of the posts in the forum) or 0 if it doesn't, and in
+        # this last case I assume that means we are dealing with the first page
+        # in a subforum spanning multiple pages.
         return 0 unless /showforum=\d+.*=\d+$/ =~ url
         return /showforum=\d+.*=(\d+)$/.match(url)[1].to_i
     end
 
     def _get_possible_next(node)
+        # Get the pages which are candidates for being next in the forum.
         links = []
         node.css("tr td a").each do |tag_a|
             if /^\d+$/.match(tag_a.content) and tag_a["href"].include?(@url)
