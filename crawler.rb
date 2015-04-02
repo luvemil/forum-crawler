@@ -133,6 +133,14 @@ class Crawler
         return n == m
     end
 
+    def self._do_page(node)
+        # Given a thread node returns an array of messages of the form
+        # {:author => value, :date => value}
+        msgs = self._get_messages(node)
+        msglist = msgs.to_a.map {|msg_node| self._get_mex_data(msg_node)}
+        return msglist
+    end
+
     def self._get_messages(node)
         # Returns a NodeSet of all the nodes containing single messages
         # node is a thread (parsed with Nokogiri)
@@ -148,12 +156,14 @@ class Crawler
         pre = node.css "tr td.row4"
         # I assume pre = [ node_containing_user, node_containing_date]
         user_urls = pre[0].css("a").select {|tag_a| /showuser=\d+/ =~ tag_a["href"]}
-        user_id = self._get_user_id(user_urls[0])
+        user = user_urls[0]
+        user_id = self._get_user_id(user["href"])
+        user_name = user.text
         # END USER
         post = pre[1].children.select{|child| /Inviato il: (.*)\n/ =~ child.content }
         date_string = /Inviato il: (.*)\n/.match(post[0])[1]
         # END date
-        data = { :author => user_id, :date => date_string }
+        data = { :author => user_id, :author_name => user_name, :date => date_string }
         return data
     end
 
