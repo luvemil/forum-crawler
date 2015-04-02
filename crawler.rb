@@ -133,6 +133,15 @@ class Crawler
         return n == m
     end
 
+    def self._get_messages(node)
+        # Returns a NodeSet of all the nodes containing single messages
+        # node is a thread (parsed with Nokogiri)
+        messages = node.xpath("//div[@class='tableborder']/table[@cellspacing='1']")
+        # The best I found to select messages was table[cellspacing='1'] as
+        # direct children of div.tableborder. Probably won't work anywhere else.
+        return messages
+    end
+
 end
 
 class Tree
