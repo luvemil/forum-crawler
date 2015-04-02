@@ -17,5 +17,6 @@ The attribute `:Crawler:root_tree` contains a tree with all forum and topic link
 
 # TODO
 
-* Crawl several forum pages
+* ~~Crawl several forum pages~~
 * Crawl threads
+* Polish code
