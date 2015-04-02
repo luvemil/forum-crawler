@@ -142,6 +142,28 @@ class Crawler
         return messages
     end
 
+    def self._get_mex_data(node)
+        # Returns important data from a message. Right now it is
+        # data = {:date = "<date>", :author = "user_id"}
+        pre = node.css "tr td.row4"
+        # I assume pre = [ node_containing_user, node_containing_date]
+        user_urls = pre[0].css("a").select {|tag_a| /showuser=\d+/ =~ tag_a["href"]}
+        user_id = self._get_user_id(user_urls[0])
+        # END USER
+        post = pre[1].children.select{|child| /Inviato il: (.*)\n/ =~ child.content }
+        date_string = /Inviato il: (.*)\n/.match(post[0])[1]
+        # END date
+        data = { :author => user_id, :date => date_string }
+        return data
+    end
+
+    def self._get_user_id(url)
+        if /showuser=\d+/ =~ url
+            return /showuser=(\d+)/.match(url)[1]
+        end
+        return nil
+    end
+
 end
 
 class Tree
