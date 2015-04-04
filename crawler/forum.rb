@@ -1,6 +1,8 @@
 require 'nokogiri'
 require 'net/http'
-require 'forum/subforums'
+require 'crawler/crawler'
+#require 'crawler/forum/subforums'
+#require 'crawler/forum/threads'
 
 module BaseCrawler
     class Forum < BaseCrawler::Crawler
@@ -13,7 +15,8 @@ module BaseCrawler
             # node is always get_page(@cur.data[:url])
             if @cur.data[:type] == "forum"
                 return self.Subforums(node)
-            # need to write the case thread
+            elsif @cur.data[:type] == "thread"
+                return self.Threads(node)
             end
         end
     end
