@@ -13,6 +13,7 @@ module BaseCrawler
         def initialize root_url
             # Maybe this can be different on subclasses. Still good as long as it
             # has a @root_tree, @cur, and data has :url key.
+            # The old @url variable is substituted by @cur.data[:url].
             data = { :url => root_url }
             @root_tree = Tree.new data
             @cur = @root_tree
@@ -40,8 +41,6 @@ module BaseCrawler
         end
 
         def crawl_page node
-            # Better to move the control to node, since if we get an error while
-            # doing res = Net::HTTP.get_response(uri) here we lose everything.
             while node
                 crawl_data = self.get_data node
                 # WARNING: get_data has to ensure that each data[:children]
