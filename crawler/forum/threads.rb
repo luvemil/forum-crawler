@@ -2,18 +2,18 @@ require 'nokogiri'
 
 module BaseCrawler
     class Forum
-        class << self
-            def Threads node
-                Forum::Threads.get_crawl_data node, @cur.data[:url]
-            end
+        # class << self
+        def Threads node
+            Forum::Threads.get_crawl_data node, @cur.data[:url]
         end
+        # end
         module Threads
-            def get_crawl_data node, url
+            def self.get_crawl_data node, url
                 messages = _do_page node
                 crawl_data = { :new_data => { :messages => messages } }
             end
 
-            def _do_page(node)
+            def self._do_page(node)
                 # Given a thread node returns an array of messages of the form
                 # {:author => value, :date => value}
                 msgs = _get_messages(node)
@@ -21,7 +21,7 @@ module BaseCrawler
                 return msglist
             end
 
-            def _get_messages(node)
+            def self._get_messages(node)
                 # Returns a NodeSet of all the nodes containing single messages
                 # node is a thread (parsed with Nokogiri)
                 messages = node.xpath("//div[@class='tableborder']/table[@cellspacing='1']")
@@ -30,7 +30,7 @@ module BaseCrawler
                 return messages
             end
 
-            def _get_mex_data(node)
+            def self._get_mex_data(node)
                 # Returns important data from a message. Right now it is
                 # data = {:date = "<date>", :author = "user_id"}
                 pre = node.css "tr td.row4"
@@ -47,7 +47,7 @@ module BaseCrawler
                 return data
             end
 
-            def _get_user_id(url)
+            def self._get_user_id(url)
                 if /showuser=\d+/ =~ url
                     return /showuser=(\d+)/.match(url)[1]
                 end

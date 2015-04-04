@@ -2,15 +2,15 @@ require 'nokogiri'
 
 module BaseCrawler
     class Forum
-        class << self
-            def Subforums node
-                Forum::Subforums.get_crawl_data node, @cur.data[:url]
-            end
+        # class << self
+        def Subforums node
+            Forum::Subforums.get_crawl_data node, @cur.data[:url]
         end
-        
+        # end
+
         module Subforums
             #Here goes everything to do on a subforum page.
-            def get_crawl_data node, url
+            def self.get_crawl_data node, url
                 # BEGIN - Get children
                 children = []
                 get_threads(node).each do |thread_url|
@@ -25,7 +25,7 @@ module BaseCrawler
                 return crawl_data
             end
 
-            def get_threads(node)
+            def self.get_threads(node)
                 # Returns an array of the threads in the page.
                 threads = []
                 node.css("tr td.row4 a").each do |tag_a|
@@ -34,7 +34,7 @@ module BaseCrawler
                 threads
             end
 
-            def get_forums(node)
+            def self.get_forums(node)
                 # Returns an array of the subforums in the page.
                 forums = []
                 node.css("tr td.row4 a").each do |tag_a|
@@ -44,7 +44,7 @@ module BaseCrawler
             end
 
             # BEGIN -- next page for forums
-            def _index(url)
+            def self._index(url)
                 # Returns the last number in the url in case it means something (like
                 # the numbering of the posts in the forum) or 0 if it doesn't, and in
                 # this last case I assume that means we are dealing with the first page
@@ -53,7 +53,7 @@ module BaseCrawler
                 return /showforum=\d+.*=(\d+)$/.match(url)[1].to_i
             end
 
-            def get_nextpage node, url
+            def self.get_nextpage node, url
                 # Returns a link to the next page.
                 # url is the current url, ideally @cur.data[:url] from a
                 # BaseCrawl object.
@@ -69,7 +69,7 @@ module BaseCrawler
                 return links[0]
             end
 
-            def _get_possible_next node, url
+            def self._get_possible_next node, url
                 # Get the pages which are candidates for being next in the forum.
                 # url is the URL of the current page.
                 links = []
@@ -81,7 +81,7 @@ module BaseCrawler
                 return links
             end
 
-            def _is_same_forum(url, target)
+            def self._is_same_forum(url, target)
                 # Returns true if target is in the same forum as url
                 t = /showforum=(\d+)/.match(target)
                 if not t

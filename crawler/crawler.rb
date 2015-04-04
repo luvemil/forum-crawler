@@ -40,7 +40,7 @@ module BaseCrawler
                     @cur.add_child child_data
                 end
             end
-            @cur.merge! crawl_data[:new_data] if crawl_data[:new_data]
+            @cur.data.merge! crawl_data[:new_data] if crawl_data[:new_data]
         end
 
         def crawl_page node
@@ -51,7 +51,7 @@ module BaseCrawler
                 # of getting data is getting urls...
                 self.put_data crawl_data
                 if crawl_data[:next_page]
-                    node = BaseCrawler.get_page crawl_data[:next_page]
+                    node = Crawler.get_page crawl_data[:next_page]
                 else
                     node = nil
                 end
@@ -59,7 +59,7 @@ module BaseCrawler
         end
 
         def crawl_all
-            node = BaseCrawler.get_page @cur.data[:url]
+            node = Crawler.get_page @cur.data[:url]
             self.crawl_page node
             @cur.children.each do |child|
                 @cur = child
