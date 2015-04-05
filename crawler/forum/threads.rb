@@ -46,7 +46,7 @@ module BaseCrawler
                 else
                     user_urls = pre[0].css("a").select {|tag_a| /showuser=\d+/ =~ tag_a["href"]}
                     user = user_urls[0]
-                    user_id = _get_user_id(user["href"]) # Fails with unregistered user TODO
+                    user_id = _get_user_id(user["href"])
                     user_name = user.text
                 end
                 # END USER

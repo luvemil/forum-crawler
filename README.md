@@ -25,7 +25,7 @@ The base logic is in the `BaseCrawler::Crawler` class. Any kind of crawler shoul
 
 * ~~Crawl several forum pages~~
 * ~~Crawl threads~~
-* Crawl multipage-threads
+* ~~Crawl multipage-threads~~
 * Stop-Resume working
 * Better tree structure
 * Polish code
