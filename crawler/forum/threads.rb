@@ -39,10 +39,16 @@ module BaseCrawler
                 # data = {:date = "<date>", :author = "user_id"}
                 pre = node.css "tr td.row4"
                 # I assume pre = [ node_containing_user, node_containing_date]
-                user_urls = pre[0].css("a").select {|tag_a| /showuser=\d+/ =~ tag_a["href"]}
-                user = user_urls[0]
-                user_id = _get_user_id(user["href"])
-                user_name = user.text
+                # Workaround for unregistered users
+                if pre[0].css("span.unreg").size > 0
+                    user_name = pre[0].css('span.unreg')[0].text
+                    user_id = "0" # user_id is a string containing a number
+                else
+                    user_urls = pre[0].css("a").select {|tag_a| /showuser=\d+/ =~ tag_a["href"]}
+                    user = user_urls[0]
+                    user_id = _get_user_id(user["href"]) # Fails with unregistered user TODO
+                    user_name = user.text
+                end
                 # END USER
                 post = pre[1].children.select{|child| /Inviato il: (.*)\n/ =~ child.content }
                 date_string = /Inviato il: (.*)\n/.match(post[0])[1]
