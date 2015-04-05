@@ -4,7 +4,7 @@ module BaseCrawler
     class Forum
         # class << self
         def Subforums node
-            Forum::Subforums.get_crawl_data node, @cur.data[:url]
+            Forum::Subforums.get_crawl_data node, @url
         end
         # end
 

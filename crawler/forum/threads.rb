@@ -4,13 +4,17 @@ module BaseCrawler
     class Forum
         # class << self
         def Threads node
-            Forum::Threads.get_crawl_data node, @cur.data[:url]
+            Forum::Threads.get_crawl_data node, @url
         end
         # end
         module Threads
             def self.get_crawl_data node, url
                 messages = _do_page node
-                crawl_data = { :new_data => { :messages => messages } }
+                next_page = get_nextpage node, url
+                if next_page
+                    puts "Found next page in #{url}"
+                end
+                crawl_data = { :new_data => { :messages => messages }, :next_page => next_page }
             end
 
             def self._do_page(node)
@@ -85,14 +89,14 @@ module BaseCrawler
                 # url is the URL of the current page.
                 links = []
                 node.css("tr td a").each do |tag_a|
-                    if /^\d+$/.match(tag_a.content) and _is_same_forum(url,tag_a["href"])
+                    if /^\d+$/.match(tag_a.content) and _is_same_topic(url,tag_a["href"])
                         links += [tag_a["href"]]
                     end
                 end
                 return links
             end
 
-            def self._is_same_forum(url, target)
+            def self._is_same_topic(url, target)
                 # Returns true if target is in the same forum as url
                 t = /showtopic=(\d+)/.match(target)
                 if not t
