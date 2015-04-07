@@ -43,7 +43,6 @@ module BaseCrawler
             if crawl_data[:new_data]
                 @cur.data.merge! crawl_data[:new_data] do |key, oldval, newval|
                     if oldval.class == Array and newval.class == Array
-                        puts "Merging arrays"
                         oldval += newval
                     end
                 end

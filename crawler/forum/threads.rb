@@ -11,9 +11,6 @@ module BaseCrawler
             def self.get_crawl_data node, url
                 messages = _do_page node
                 next_page = get_nextpage node, url
-                if next_page
-                    puts "Found next page in #{url}"
-                end
                 crawl_data = { :new_data => { :messages => messages }, :next_page => next_page }
             end
 
