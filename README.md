@@ -28,5 +28,6 @@ The base logic is in the `BaseCrawler::Crawler` class. Any kind of crawler shoul
 * ~~Crawl multipage-threads~~
 * Stop-Resume working
 * Better tree structure
+    - [RubyTree](https://github.com/evolve75/RubyTree)
 * Polish code
 * Better documentation
