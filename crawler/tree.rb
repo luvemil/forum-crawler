@@ -1,5 +1,6 @@
+require 'rubytree'
 module BaseCrawler
-    class Tree
+    class Tree < ::Tree::TreeNode
         attr_accessor :data, :children, :parent
         def initialize data = nil
             @children = []
