@@ -15,7 +15,7 @@ module BaseCrawler
             # has a @root_tree, @cur, and data has :url key.
             # The old @url variable is substituted by @cur.data[:url].
             data = { :url => root_url }
-            @root_tree = Tree.new data
+            @root_tree = BaseCrawler::Tree.new data
             @cur = @root_tree
         end
 
